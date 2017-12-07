@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 	"os"
 	"strings"
 
@@ -19,6 +20,10 @@ var errRecordNotFound = errors.New("record not found")
 // Record represents a hosts record
 type Record struct {
 	Paused bool `json:"paused"`
+}
+
+func (re *Record) Bind(r *http.Request) error {
+	return nil
 }
 
 func (r *Record) isAllowed() bool {

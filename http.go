@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	"github.com/boltdb/bolt"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/render"
 	"github.com/miekg/dns"
-	"github.com/pressly/chi"
-	"github.com/pressly/chi/render"
 )
 
 // H represents a map[string]interface{}
@@ -240,7 +240,7 @@ func apiRecordsUpdateHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Bind
-	if err := render.Bind(r.Body, &data); err != nil && err != io.EOF {
+	if err := render.Bind(r, &data); err != nil && err != io.EOF {
 		log.Printf("render.Bind() Error: %s\n", err)
 		http.Error(w, http.StatusText(400), 400)
 		return
@@ -270,14 +270,20 @@ func apiRecordsDeleteHandler(w http.ResponseWriter, r *http.Request) {
 	render.NoContent(w, r)
 }
 
+type updateHeader struct {
+	Disabled bool `json:"disabled"`
+}
+
+func (uh *updateHeader) Bind(r *http.Request) error {
+	return nil
+}
+
 // PUT /api/settings/
 func apiSettingsUpdateHandler(w http.ResponseWriter, r *http.Request) {
-	var data struct {
-		Disabled bool `json:"disabled"`
-	}
+	var data updateHeader
 
 	// Bind
-	if err := render.Bind(r.Body, &data); err != nil {
+	if err := render.Bind(r, &data); err != nil {
 		log.Printf("render.Bind() Error: %s\n", err)
 		http.Error(w, http.StatusText(400), 400)
 		return

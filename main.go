@@ -15,9 +15,9 @@ import (
 	"time"
 
 	"github.com/boltdb/bolt"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/miekg/dns"
-	"github.com/pressly/chi"
-	"github.com/pressly/chi/middleware"
 )
 
 // DB represents the Bolt DB instance
